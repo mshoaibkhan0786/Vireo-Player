@@ -4,7 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import './index.css'
 import App from './App.jsx'
 import { PlayerProvider } from './context/PlayerContext';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -13,9 +13,9 @@ createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <HelmetProvider>
         <PlayerProvider>
-          <BrowserRouter>
+          <HashRouter>
             <App />
-          </BrowserRouter>
+          </HashRouter>
         </PlayerProvider>
       </HelmetProvider>
     </ErrorBoundary>

@@ -143,7 +143,7 @@ export function Dashboard() {
     const rangeLabel = timeRange === '7d' ? "7-Day" : timeRange === 'calendar' ? "Daily" : "Today's";
 
     return (
-        <div className="h-screen bg-black text-white p-8 relative overflow-y-auto overflow-x-hidden font-sans pb-40">
+        <div className="h-screen bg-black text-white p-4 md:p-8 relative overflow-y-auto overflow-x-hidden font-sans pb-32 md:pb-40">
 
             {/* Background Mesh */}
             <div className="absolute inset-0 opacity-10 pointer-events-none"
@@ -151,19 +151,19 @@ export function Dashboard() {
 
             <div className="max-w-7xl mx-auto relative z-10">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-12">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 md:mb-12 gap-6">
                     <div className="flex items-center gap-4">
                         <div className="p-3 bg-red-600 rounded-xl shadow-lg shadow-red-600/20">
                             <BarChart3 className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                            <p className="text-gray-400">Overview of user activity and performance.</p>
+                            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
+                            <p className="text-sm md:text-base text-gray-400">Overview of user activity.</p>
                         </div>
                     </div>
 
                     <Link to="/">
-                        <Button variant="outline" className="border-white/10 hover:bg-white/10 gap-2">
+                        <Button variant="outline" className="border-white/10 hover:bg-white/10 gap-2 w-full md:w-auto justify-center">
                             <ChevronLeft className="w-4 h-4" /> Back to Player
                         </Button>
                     </Link>
@@ -251,8 +251,8 @@ export function Dashboard() {
                 </div>
 
                 {/* Big Chart Section */}
-                <GlassPanel className="p-8">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <GlassPanel className="p-4 md:p-8">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-6">
                         <div>
                             <h3 className="text-xl font-bold text-white">Engagement History</h3>
                             <p className="text-sm text-gray-400">
@@ -261,7 +261,7 @@ export function Dashboard() {
                                 {timeRange === 'calendar' && `Hourly breakdown for ${selectedDate}.`}
                             </p>
                         </div>
-                        <div className="flex items-center gap-2 bg-black/40 p-1 rounded-lg">
+                        <div className="flex flex-wrap items-center gap-2 bg-black/40 p-1 rounded-lg">
                             <button
                                 onClick={() => setTimeRange('24h')}
                                 className={cn("px-3 py-1.5 text-xs rounded-md transition-all", timeRange === '24h' ? "bg-white/10 text-white font-medium" : "text-gray-400 hover:text-white")}

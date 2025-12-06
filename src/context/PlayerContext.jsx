@@ -269,13 +269,36 @@ export function PlayerProvider({ children }) {
     };
 
     // Fullscreen Logic
+    const wasPlaylistOpenRef = useRef(isPlaylistOpen);
+
+    // Sync ref for manual toggles
+    useEffect(() => {
+        if (!document.fullscreenElement) {
+            wasPlaylistOpenRef.current = isPlaylistOpen;
+        }
+    }, [isPlaylistOpen]);
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            if (document.fullscreenElement) {
+                // Entered Fullscreen
+                setIsPlaylistOpen(false);
+            } else {
+                // Exited Fullscreen - Restore previous state
+                setIsPlaylistOpen(wasPlaylistOpenRef.current);
+            }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    }, []);
+
     const toggleFullscreen = () => {
         const container = document.getElementById('player-storage-root');
         if (!container) return;
 
         if (!document.fullscreenElement) {
             container.requestFullscreen()
-                .then(() => setIsPlaylistOpen(false)) // Auto-close playlist
                 .catch(err => console.error("Fullscreen error:", err));
         } else {
             document.exitFullscreen();

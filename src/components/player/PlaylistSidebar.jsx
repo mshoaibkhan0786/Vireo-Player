@@ -9,8 +9,8 @@ export function PlaylistSidebar() {
     if (!playlist || playlist.length === 0) return null;
 
     return (
-        <div className="w-80 h-[80vh] overflow-y-auto hidden md:flex flex-col gap-2 p-2">
-            <GlassPanel className="h-full overflow-y-auto p-4 custom-scrollbar">
+        <div className="w-full h-full flex flex-col">
+            <GlassPanel className="h-full overflow-y-auto p-4 custom-scrollbar rounded-none border-0">
                 <div className="flex items-center justify-between mb-4 sticky top-0 z-10 pb-2 border-b border-white/10 bg-inherit/95 backdrop-blur-xl">
                     <h3 className="text-lg font-semibold text-white">Playlist</h3>
                     <button

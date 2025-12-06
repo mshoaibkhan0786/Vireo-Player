@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 
 export function SEOHead({ title, description }) {
     const siteTitle = "Vireo Player";
-    const tagline = "Cinematic Local Video Player";
+    const tagline = "Vireo Player - The Best Free Online Video Player. Watch movies, MKV, MP4 & webm locally in 4K. 100% Private, No Ads, No Uploads.";
     const documentTitle = title || siteTitle;
     const metaDescription = description || tagline;
     const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
@@ -12,6 +12,7 @@ export function SEOHead({ title, description }) {
             <title>{documentTitle}</title>
             <meta name="description" content={metaDescription} />
             <meta name="keywords" content="video player, local player, react player, cinematic, web player, mp4, webm, subtitles" />
+            <meta name="robots" content="index, follow" />
 
             {/* Open Graph / Facebook */}
             <meta property="og:type" content="website" />

@@ -5,7 +5,7 @@ import { Slider } from '../ui/Slider';
 import { formatTime, cn } from '../../lib/utils';
 import { useState } from 'react';
 
-export function Controls({ containerId }) {
+export function Controls({ containerId, isVisible, onInteraction }) {
     const {
         isPlaying, togglePlay, volume, setVolume, currentTime, duration, seek, toggleMute, isMuted,
         subtitleTracks, setSubtitleMode, audioTracks, toggleAudioTrack,
@@ -38,11 +38,21 @@ export function Controls({ containerId }) {
 
     const handlePlayPause = (e) => {
         e.stopPropagation();
+        onInteraction?.();
         togglePlay();
     };
 
     return (
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-24 opacity-0 group-hover/player:opacity-100 transition-opacity duration-300">
+        <div
+            className={cn(
+                "absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-24 transition-opacity duration-300",
+                isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+            )}
+            onClick={(e) => {
+                e.stopPropagation();
+                onInteraction?.();
+            }}
+        >
             <div className="flex flex-col gap-2 max-w-4xl mx-auto w-full relative">
                 {/* Settings Popover */}
                 {showSettings && (

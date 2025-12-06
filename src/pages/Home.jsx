@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SplashHero } from '../components/layout/SplashHero';
 import { cn } from '../lib/utils';
 import { SEOHead } from '../components/layout/SEOHead';
@@ -63,6 +63,33 @@ export function Home() {
     const currentVideo = playlist[currentVideoIndex];
     const isFullscreen = false;
 
+    // Controls Visibility Logic (Mobile Friendly)
+    const [isControlsVisible, setIsControlsVisible] = useState(false);
+    const controlsTimeoutRef = useRef(null);
+
+    const showControls = () => {
+        setIsControlsVisible(true);
+        if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+
+        // Auto-hide after 3 seconds if playing
+        if (isPlaying) {
+            controlsTimeoutRef.current = setTimeout(() => {
+                setIsControlsVisible(false);
+            }, 3000);
+        }
+    };
+
+    // Keep controls visible while paused or hovering controls
+    useEffect(() => {
+        if (!isPlaying) {
+            setIsControlsVisible(true);
+            if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+        } else {
+            // If playing started, trigger hide timer
+            showControls();
+        }
+    }, [isPlaying]);
+
     return (
         <DropZone onFileDrop={handleFileDrop}>
             <SEOHead title={currentVideo ? currentVideo.name : null} />
@@ -72,12 +99,26 @@ export function Home() {
                     onFileSelect={onFileSelectWrapper}
                 />
             ) : (
-                <div id="player-storage-root" className="relative h-screen w-full bg-black flex overflow-hidden">
+                <div
+                    id="player-storage-root"
+                    className="relative h-screen w-full bg-black flex flex-col md:flex-row overflow-hidden cursor-none hover:cursor-default"
+                    onMouseMove={showControls}
+                    onClick={showControls}
+                    onTouchStart={showControls}
+                >
                     {/* Player UI */}
-                    <div className="flex-1 flex flex-col relative group/player">
+                    <div className={cn(
+                        "relative flex flex-col transition-all duration-300",
+                        // Mobile: If playlist open, video shrinks to 40vh (landscape player style)
+                        // Desktop: Always flex-1
+                        isPlaylistOpen ? "h-[30vh] md:h-full md:flex-1" : "flex-1 h-full"
+                    )}>
                         {/* Header with Home & Stats */}
-                        <div className="absolute top-0 left-0 right-0 p-4 z-20 flex justify-between items-start opacity-0 group-hover/player:opacity-100 transition-opacity duration-300 bg-gradient-to-b from-black/80 to-transparent">
-                            <Button variant="ghost" onClick={goHome} className="text-white/80 hover:text-white flex items-center gap-2" title="Back to Home">
+                        <div className={cn(
+                            "absolute top-0 left-0 right-0 p-4 z-20 flex justify-between items-start transition-opacity duration-300 bg-gradient-to-b from-black/80 to-transparent pointer-events-none",
+                            isControlsVisible ? "opacity-100" : "opacity-0"
+                        )}>
+                            <Button variant="ghost" onClick={goHome} className="text-white/80 hover:text-white flex items-center gap-2 pointer-events-auto" title="Back to Home">
                                 <ChevronLeft className="w-6 h-6" />
                             </Button>
 
@@ -97,14 +138,19 @@ export function Home() {
                                 className="w-full h-full"
                                 onClick={togglePlay}
                             />
-                            <Controls containerId="player-storage-root" />
+                            <Controls containerId="player-storage-root" isVisible={isControlsVisible} onInteraction={showControls} />
                         </div>
                     </div>
 
                     {/* Playlist Sidebar */}
                     <div className={cn(
-                        "transition-all duration-300 ease-in-out overflow-hidden bg-zinc-950/90 border-l border-white/5",
-                        isPlaylistOpen ? "w-80 opacity-100" : "w-0 opacity-0"
+                        "transition-all duration-300 ease-in-out overflow-hidden bg-zinc-950/95 md:bg-zinc-950/90 border-t md:border-t-0 md:border-l border-white/5",
+                        // Mobile: Stacked below video
+                        // Desktop: Side by side
+                        "w-full md:h-full relative",
+                        isPlaylistOpen
+                            ? "flex-1 md:w-80 opacity-100 translate-y-0 md:translate-x-0"
+                            : "h-0 md:h-full md:w-0 opacity-0 md:opacity-0 translate-y-full md:translate-y-0 md:translate-x-full"
                     )}>
                         <PlaylistSidebar />
                     </div>
