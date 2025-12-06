@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-black text-white min-h-screen overflow-hidden selection:bg-red-500/30;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-zinc-950/80 backdrop-blur-xl border border-white/5 shadow-2xl;
+  }
+}
